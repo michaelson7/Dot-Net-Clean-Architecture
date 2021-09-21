@@ -1,0 +1,236 @@
+﻿@page
+@model WEB_DIR.Pages.GaugeRecords.IndexModel
+@{
+    ViewData["Title"] = "GaugeRecords";
+}
+
+<div>
+    <h4 class="mt-4">GaugeRecords Handler</h4>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active"><a asp-page="/Index" class="ml-1 mr-1">Dashboard</a> / GaugeRecords</li>
+    </ol>
+
+    @*response div*@
+    @if (Model.hasResponse)
+    {
+        <div class="mb-4">
+            @if (Model.hasError)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <b>GaugeRecords Successful @Model.errorMessage</b>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-success" role="alert">
+                    <b>Stations Successful @Model.dbOperation</b>
+                </div>
+            }
+        </div>
+    }
+
+    <div>
+        <div class="row">
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-primary text-white mb-4">
+                    <div class="card-body">
+                        <!-- fetch user# -->
+                        <h4> GaugeRecords</h4>
+                        <span id="userNum"><br>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-warning text-white mb-4">
+                    <div class="card-body">
+                        <h4>Admin</h4>
+                        <span id="eventNum"><br>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-dark text-white mb-4">
+                    <div class="card-body">
+                        <h4>Staff</h4>
+                        <span id="resourceNum"><br>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-danger text-white mb-4">
+                    <div class="card-body">
+                        <h4>Ordinary</h4>
+                        <span id="facultyNum"><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <button class="btn btn-primary w-100" data-toggle="modal" data-target=".ModelDialog">
+            Add GaugeRecords
+        </button>
+    </div>
+
+    <!-- database table -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table mr-1"></i>
+            Current GaugeRecords
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Image</th>
+                            <th>Uploader</th>
+                            <th>Gauge</th>
+                            <th>Location Of Upload</th>
+                            <th>Gauge Coordinates</th>
+                            <th>Water Level</th>
+                            <th>River Flow</th>
+                            <th>Temperature</th>
+                            <th>Approval</th>
+                            <th>Approver</th>
+                            <th>Timestamp</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tableData">
+                        @if (Model.hasData)
+                        {
+                            foreach (var data in Model.GaugeRecordsModelList)
+                            {
+                                <tr>
+                                    <td>@data.Id</td>
+                                    <td>
+                                        <a href="~/Images/@data.Imagepath">
+                                            <img src="~/Images/@data.Imagepath" width="100" height="100" class="rounded" alt="File Not Found"
+                                                 onerror="this.onerror=null; this.src='https://image.freepik.com/free-vector/error-404-concept-illustration_114360-1811.jpg'" />
+                                        </a>
+                                    </td>
+                                    <td>@data.UploaderModel.FirstName @data.UploaderModel.LastName</td>
+                                    <td>@data.GaugeStationModel.Title</td>
+                                    <td>@data.GPSLocation</td>
+                                    <td>@data.GaugeStationModel.StationsModel.StationStatisticsModel.Coordinates</td>
+                                    <td>@data.Waterlevel</td>
+                                    <td>@data.RiverFlow</td>
+                                    <td>@data.Temperature</td>
+                                    <td>
+                                        <form method="post">
+                                            <input type="hidden" name="Handleapproval" value="true" />
+                                            <input type="hidden" name="ApproveId" value="@data.Id" />
+                                            @if (data.Approval != true)
+                                            {
+                                                <p class="text-danger">@data.Approval</p>
+                                                <input type="hidden" name="Approval" value="True" />
+                                                <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you want to approve this?')">Approve</button>
+                                            }
+                                            else
+                                            {
+                                                <p class="text-success">@data.Approval</p>
+                                                <input type="hidden" name="Approval" value="False" />
+                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to un-approve this?')">un-approve</button>
+                                            }
+                                        </form>
+                                    </td>
+                                    <td>@data.ApproverModel.FirstName @data.ApproverModel.LastName</td>
+                                    <td>@data.Timestamp</td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="p-2">
+                                                <form method="post">
+                                                    <input type="hidden" name="deleteId" value="@data.Id" />
+                                                    <button type="button" class="btn btn-primary" onclick="editModel(@data.Id,
+                                                         '@data.GaugeStationModel.Title',@data.GaugeStationModel.Id,'@data.GPSLocation',@data.Waterlevel,
+                                                            @data.RiverFlow,@data.Temperature,'@data.Imagepath')">
+                                                        Edit
+                                                    </button>
+                                                    <span class="pr-1 pl-1"></span>
+                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this?')">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal" class="modal fade ModelDialog" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" name="Id" />
+                <input type="hidden" name="Imagepath" />
+                <input type="hidden" name="dbOperations" value="Create" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">GaugeRecords Modal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Image</label>
+                        <input asp-for="@Model.GaugeRecordsModel.ImageFile" type="file" class="form-control" name="ImageFile" accept="image/*">
+                        <label>GPSLocation</label>
+                        <input type="text" class="form-control" name="GPSLocation" required>
+                        <label>Water level</label>
+                        <input type="number" class="form-control" name="Waterlevel" min="0" value="0" required>
+                        <label>Temperature</label>
+                        <input type="number" class="form-control" name="Temperature" min="0" value="0" required>
+                        <label>RiverFlow</label>
+                        <input type="number" class="form-control" name="RiverFlow" min="0" value="0" required>
+                        <label>Gauge</label>
+                        <select class="form-control" name="GaugeId">
+                            @foreach (var item in Model.GaugeStationModel)
+                            {
+                                <option value="@item.Id">@item.Title</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function editModel(id, Gagetitle, gageId, Location, water, RiverFlow, Temperature, Imagepath) {
+        //defaults
+        document.getElementsByName('dbOperations')[0].value = "Update";
+        document.getElementsByName('Id')[0].value = id;
+
+        //custom
+        document.getElementsByName('Imagepath')[0].value = Imagepath;
+        document.getElementsByName('GPSLocation')[0].value = Location;
+        document.getElementsByName('Waterlevel')[0].value = water;
+        document.getElementsByName('Temperature')[0].value = Temperature;
+        document.getElementsByName('RiverFlow')[0].value = RiverFlow;
+
+        //select handler
+        var select = document.getElementsByName('GaugeId')[0];
+        var opt = document.createElement('option');
+        opt.value = gageId;
+        opt.innerHTML = Gagetitle;
+        select.add(opt, select[0]);
+        select.selectedIndex = 0;
+
+        //display model
+        $('#modal').modal('show');
+    }
+</script>

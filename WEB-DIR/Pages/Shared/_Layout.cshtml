@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WEB_DIR</title>
+
+    @*CSS*@
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    @*dark theme*@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrapDark.min.css" />
+
+    @*icofont*@
+    <link rel="stylesheet" href="~/lib/icofont/icofont.min.css" />
+
+    @*alertify*@
+    <script src="~/lib/alertifyjs/alertify.min.js"></script>
+    <link href="~/lib/alertifyjs/css/alertify.min.css" rel="stylesheet" />
+    <link href="~/lib/alertifyjs/css/themes/default.min.css" rel="stylesheet" />
+</head>
+<body class="sb-nav-fixed ">
+
+    @*navigation*@
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <h3><a class="navbar-brand" href="index.php">University</a></h3>
+        <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+        <!-- Navbar Search-->
+        <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+        </form>
+        <!-- Navbar-->
+        <ul class="navbar-nav ml-auto ml-md-0">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#" onclick="log_out()">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <div id="layoutSidenav">
+
+        @*side nav*@
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" asp-area="" asp-page="/Index">
+                            <div class="sb-nav-link-icon">
+                                <i class="icofont-dashboard-web"></i>
+                            </div>
+                            Dashboard
+                        </a>
+
+                        <!-- meta data -->
+                        <div>
+                            <div class="sb-sidenav-menu-heading">System Data</div>
+                            <a class="nav-link" asp-area="" asp-page="/Stations/Index">
+                                <div class="sb-nav-link-icon">
+                                    <i class=" icofont-phone"></i>
+                                </div>
+                                Stations
+                            </a>
+                            <a class="nav-link" asp-area="" asp-page="/GaugeStations/Index">
+                                <div class="sb-nav-link-icon">
+                                    <i class="icofont-speed-meter"></i>
+                                </div>
+                                Gauge Stations
+                            </a>
+                            <a class="nav-link" asp-area="" asp-page="/GaugeRecords/Index">
+                                <div class="sb-nav-link-icon">
+                                    <i class="icofont-notebook"></i>
+                                </div>
+                                Gauge Records
+                            </a>
+                            <a class="nav-link" asp-area="" asp-page="/News/Index">
+                                <div class="sb-nav-link-icon">
+                                    <i class="icofont-newspaper"></i>
+                                </div>
+                                News
+                            </a>
+                        </div>
+
+                        <div>
+                            <div class="sb-sidenav-menu-heading">User Data</div>
+                            <a class="nav-link" asp-area="" asp-page="/Users/Index">
+                                <div class="sb-nav-link-icon">
+                                    <i class=" icofont-users-alt-3"></i>
+                                </div>
+                                Users
+                            </a>
+                            <a class="nav-link" asp-area="" asp-page="/Staff/Index">
+                                <div class="sb-nav-link-icon">
+                                    <i class="icofont-user-alt-2"></i>
+                                </div>
+                                Staff
+                            </a>
+                            <a class="nav-link" asp-area="" asp-page="/Roles/Index">
+                                <div class="sb-nav-link-icon">
+                                    <i class="icofont-id-card"></i>
+                                </div>
+                                Roles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Logged in as:</div>
+                    <p id="UserName"></p>
+                </div>
+            </nav>
+        </div>
+
+        @*main body*@
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+            </main>
+
+            <!-- adding footer -->
+            <footer class="py-4  bg-dark mt-auto">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; University 2020</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

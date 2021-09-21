@@ -1,0 +1,209 @@
+﻿@page
+@model WEB_DIR.Pages.Staff.IndexModel
+@{
+    ViewData["Title"] = "Staff";
+}
+
+<div>
+    <h4 class="mt-4">Staff Handler</h4>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active"><a asp-page="/Index" class="ml-1 mr-1">Dashboard</a> / Staff</li>
+    </ol>
+
+    @*response div*@
+    @if (Model.hasResponse)
+    {
+        <div class="mb-4">
+            @if (Model.hasError)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <b>Staff Successful @Model.errorMessage</b>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-success" role="alert">
+                    <b>Stations Successful @Model.dbOperation</b>
+                </div>
+            }
+        </div>
+    }
+
+    <div>
+        <div class="row">
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-primary text-white mb-4">
+                    <div class="card-body">
+                        <!-- fetch user# -->
+                        <h4> Staff</h4>
+                        <span id="userNum"><br>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-warning text-white mb-4">
+                    <div class="card-body">
+                        <h4>Admin</h4>
+                        <span id="eventNum"><br>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-dark text-white mb-4">
+                    <div class="card-body">
+                        <h4>Staff</h4>
+                        <span id="resourceNum"><br>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-danger text-white mb-4">
+                    <div class="card-body">
+                        <h4>Ordinary</h4>
+                        <span id="facultyNum"><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <button class="btn btn-primary w-100" data-toggle="modal" data-target=".ModelDialog">
+            Add Staff
+        </button>
+    </div>
+
+    <!-- database table -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table mr-1"></i>
+            Current Staff
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Names</th>
+                            <th>Email</th>
+                            <th>Work Station</th>
+                            <th>Salary</th>
+                            <th>Date Created</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tableData">
+                        @if (Model.hasData)
+                        {
+                            foreach (var data in Model.StaffModelList)
+                            {
+                                <tr>
+                                    <td>@data.Id</td>
+                                    <td>@data.UsersModel.FirstName @data.UsersModel.LastName</td>
+                                    <td>@data.UsersModel.Email</td>
+                                    <td>@data.StationsModel.Title</td>
+                                    <td>@data.Salary</td>
+                                    <td>@data.UsersModel.Timestamp</td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="p-2">
+                                                <form method="post">
+                                                    <input type="hidden" name="deleteId" value="@data.Id" />
+                                                    <button type="button" class="btn btn-primary" onclick="editModel(@data.Id,
+                                                        '@data.Salary',@data.StationId)">
+                                                        Edit
+                                                    </button>
+                                                    <span class="pr-1 pl-1"></span>
+                                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this?')">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal" class="modal fade ModelDialog" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post">
+                <input type="hidden" name="Id" />
+                <input type="hidden" name="dbOperations" value="Create" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Staff Modal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div name="shouldHide">
+                            <label>First Name</label>
+                            <input type="text" class="form-control" name="FirstName">
+                            <label>Last Name</label>
+                            <input type="text" class="form-control" name="LastName">
+                            <label>Email</label>
+                            <input type="email" class="form-control" name="Email">
+                            <label>Password</label>
+                            <input type="password" class="form-control" name="Password">
+                            <label>Role</label>
+                            <select class="form-control" name="RoleId">
+                                @foreach (var item in Model.roles)
+                                {
+                                    <option value="@item.Id">@item.Title</option>
+                                }
+                            </select>
+                        </div>
+                        <label>Salary</label>
+                        <input type="number" class="form-control" name="Salary">
+                        <label>station</label>
+                        <select class="form-control" name="StationId">
+                            @foreach (var item in Model.stationsModel)
+                            {
+                                <option value="@item.Id">@item.Title</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function editModel(id, Salary, StationId) {
+        //defaults
+        document.getElementsByName('dbOperations')[0].value = "Update";
+        document.getElementsByName('Id')[0].value = id;
+
+        //custom
+        document.getElementsByName('Salary')[0].value = Salary;
+
+        //hide un-needed values
+        document.getElementsByName('shouldHide')[0].style.display = 'none';
+
+        //select handler
+        @*var select = document.getElementsByName('RoleId')[0];
+        var opt = document.createElement('option');
+        opt.value = roleId;
+        opt.innerHTML = roleName;
+        select.add(opt, select[0]);
+        select.selectedIndex = 0;*@
+
+        //display model
+        $('#modal').modal('show');
+    }
+</script>
+
