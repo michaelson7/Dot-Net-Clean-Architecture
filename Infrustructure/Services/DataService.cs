@@ -656,6 +656,41 @@ namespace Infrustructure.Services
             return output;
         }
 
+        public async Task<List<HistoricalDataModel>> StationsGetHistoricalDataYears(int id)
+        {
+            List<HistoricalDataModel> output = new List<HistoricalDataModel>();
+            output = await _db.LoadDataAsync<HistoricalDataModel, dynamic>(_sp.StationsGetHistoricalDataYears,
+                                                 new
+                                                 { StationId = id },
+                                                 connectionStringName,
+                                                 true);
+            return output;
+        }
+
+        public async Task<List<HistoricalDataModel>> StationsGetHistoricalData(int id)
+        {
+            List<HistoricalDataModel> output = new List<HistoricalDataModel>();
+
+            output = await StationsGetHistoricalDataYears(id);
+
+            foreach (var data in output)
+            {
+                var value = await _db.LoadDataAsync<StationStatsModel, dynamic>(_sp.StationsGetHistoricalData,
+                                             new
+                                             {
+                                                 StationId = id,
+                                                 Year = data.Year
+                                             },
+                                             connectionStringName,
+                                             true);
+                if (value != null)
+                {
+                    data.StationStatsModel = value;
+                }
+            }
+            return output;
+        }
+
         public async Task<List<GaugeStationModel>> StationsGetGauge(int Id)
         {
             List<GaugeStationModel> output = new List<GaugeStationModel>();

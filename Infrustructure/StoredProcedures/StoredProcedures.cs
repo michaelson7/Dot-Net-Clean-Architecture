@@ -64,6 +64,8 @@ namespace Infrustructure.StoredProcedures
         public string StationsDelete = baseValue + "StationsDelete";
         public string StationsGet = baseValue + "StationsGet";
         public string StationsGetAll = baseValue + "StationsGetAll";
+        public string StationsGetHistoricalDataYears = baseValue + "StationsGetHistoricalDataYears";
+        public string StationsGetHistoricalData = baseValue + "StationsGetHistoricalData";
 
         //stationStats
         public string StationStatisticsCreate = baseValue + "StationStatisticsCreate";

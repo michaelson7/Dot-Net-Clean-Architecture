@@ -62,6 +62,9 @@ namespace Application.Interfaces
         Task<StationsModel> StationsGet(int Id);
         Task<List<StationsModel>> StationsGetAll();
         Task<List<GaugeStationModel>> StationsGetGauge(int Id);
+        Task<List<HistoricalDataModel>> StationsGetHistoricalDataYears(int Id);
+        Task<List<HistoricalDataModel>> StationsGetHistoricalData(int id);
+
 
         //stationStats
         Task<int> StationStatisticsCreate(StationStatisticsModel model);

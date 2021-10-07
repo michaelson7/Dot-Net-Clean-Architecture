@@ -67,6 +67,21 @@ namespace API_DIR.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("getHistoricalDataStations")]
+        public async Task<ActionResult<IEnumerable<HistoricalDataModel>>> getHistoricalDataStations(int stationId)
+        {
+            try
+            {
+                var output = await _db.StationsGetHistoricalData(stationId);
+                return _response.getResponse(output, "station historical data not found");
+            }
+            catch (Exception e)
+            {
+                return _response.errorResponse(e.Message);
+            }
+        }
+
         //update
         [HttpPost]
         [Route("updateStations")]
