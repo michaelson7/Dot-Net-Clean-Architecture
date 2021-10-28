@@ -102,7 +102,7 @@
                                     <td>@data.Id</td>
                                     <td>@data.FirstName @data.LastName</td>
                                     <td>@data.Email</td>
-                                    <td>@data.RolesModel.Title</td>
+                                    <td>@data.RolesData.Title</td>
                                     <td>@data.Timestamp</td>
                                     <td>
                                         <div class="row">
@@ -110,7 +110,7 @@
                                                 <form method="post">
                                                     <input type="hidden" name="deleteId" value="@data.Id" />
                                                     <button type="button" class="btn btn-primary" onclick="editModel(@data.Id,
-                                                        '@data.FirstName','@data.LastName','@data.Email','@data.RolesModel.Title','@data.RolesModel.Id')">
+                                                        '@data.FirstName','@data.LastName','@data.Email','@data.RolesData.Title','@data.RolesData.Id')">
                                                         Edit
                                                     </button>
                                                     <span class="pr-1 pl-1"></span>

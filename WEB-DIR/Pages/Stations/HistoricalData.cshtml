@@ -1,0 +1,187 @@
+﻿@page
+@model WEB_DIR.Pages.Stations.HistoricalDataModel
+@{
+}
+
+<div>
+    <h4 class="mt-4">Stations Stats</h4>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active"><a asp-page="/Stations/Index" class="ml-1 mr-1">Stations</a> / Stats</li>
+    </ol>
+
+    <!-- charts -->
+    <div class="row">
+        @* Water Level *@
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-area mr-1"></i>
+                    Water Level
+                </div>
+                <div class="card-body"><canvas id="waterChart" width="100%" height="40"></canvas></div>
+            </div>
+        </div>
+
+        @* River Flow *@
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-bar mr-1"></i>
+                    RiverFlow
+                </div>
+                <div class="card-body"><canvas id="riverChart" width="100%" height="40"></canvas></div>
+            </div>
+        </div>
+
+        @* Temperature *@
+        <div class="col-xl-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-bar mr-1"></i>
+                    Temperature
+                </div>
+                <div class="card-body"><canvas id="temperatureChart" width="100%" height="40"></canvas></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(async function () {
+        Chart.defaults.global.defaultFontColor = "#fff";
+        await getWater();
+        // await getRiver();
+        // await getTemperature();
+    });
+
+    async function getWater() {
+        var waterLevelObject = [];
+        var riverFlowObject = [];
+        var temperatureObject = [];
+
+        await makeGetRequest(baseUrl + `getHistoricalDataStations?stationId=@Model.id`).then(response => {
+            if (response != null) {
+                for (i in response.results) {
+                    var dataList = response.results[i];
+                    var colors = generateColor();
+                    var waterdataSet = []
+                    var riverdataSet = []
+                    var tempdataSet = []
+
+                    for (s in dataList.stationStatsModel) {
+                        var value = dataList.stationStatsModel[s];
+                        waterdataSet.push(value.waterLevel);
+                        riverdataSet.push(value.riverFlow);
+                        tempdataSet.push(value.temperature);
+                    }
+
+                    waterLevelObject.push({
+                        label: dataList.year,
+                        data: waterdataSet,
+                        borderColor: colors[3],
+                    });
+                    riverFlowObject.push({
+                        label: dataList.year,
+                        data: riverdataSet,
+                        borderColor: colors[6],
+                    });
+                    temperatureObject.push({
+                        label: dataList.year,
+                        data: tempdataSet,
+                        borderColor: colors[1],
+                    });
+                }
+            }
+        });
+
+        const Waterdata = {
+            labels: monthValue(),
+            datasets: waterLevelObject
+        };
+        var ctx = document.getElementById('waterChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: Waterdata
+        });
+
+        const Riverdata = {
+            labels: monthValue(),
+            datasets: riverFlowObject
+        };
+        var riverChart = document.getElementById('riverChart').getContext('2d');
+        var chart = new Chart(riverChart, {
+            type: 'line',
+            data: Riverdata
+        });
+
+        const Tempdata = {
+            labels: monthValue(),
+            datasets: temperatureObject
+        };
+        var temperatureChart = document.getElementById('temperatureChart').getContext('2d');
+        var chart = new Chart(temperatureChart, {
+            type: 'line',
+            data: Tempdata
+        });
+    }
+
+    function getMonth(num) {
+        var month;
+        switch (num) {
+            case 1:
+                month="January"
+                break;
+            case 2:
+                month = "February"
+                break;
+            case 3:
+                month = "March"
+                break;
+            case 4:
+                month = "April"
+                break;
+            case 5:
+                month = "May"
+                break;
+            case 6:
+                month = "June"
+                break;
+            case 7:
+                month ="July"
+                break;
+            case 8:
+                month = "August"
+                break;
+            case 9:
+                month = "September"
+                break;
+            case 10:
+                month = "October"
+                break;
+            case 11:
+                month = "November"
+                break;
+            case 12:
+                month = "December"
+                break;
+        }
+        return month;
+    }
+
+    function monthValue() {
+        const month = new Array();
+        month[0] = "Jan";
+        month[1] = "Feb";
+        month[2] = "Mar";
+        month[3] = "April";
+        month[4] = "May";
+        month[5] = "June";
+        month[6] = "July";
+        month[7] = "Aug";
+        month[8] = "Sept";
+        month[9] = "Oct";
+        month[10] = "Nov";
+        month[11] = "Dece";
+        return month;
+    }
+</script>

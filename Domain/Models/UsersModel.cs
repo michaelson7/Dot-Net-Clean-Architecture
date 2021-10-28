@@ -14,7 +14,10 @@ namespace Domain.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public int RoleId { get; set; }
+        public int AccountStatusId { get; set; }
         public DateTime Timestamp { get; set; }
-        public RolesModel RolesModel { get; set; } = new();
+
+        public AccountStatusModel AccountStatusData { get; set; }
+        public RolesModel RolesData { get; set; } = new();
     }
 }

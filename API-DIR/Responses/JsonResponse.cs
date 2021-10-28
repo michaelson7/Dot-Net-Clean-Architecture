@@ -13,7 +13,7 @@ namespace API_DIR.Responses
 
         public dynamic getResponse(dynamic output, string errorMessage)
         {
-            if (output != null)
+            if (output != null || output.length() < 1)
             {
                 response = new ResponseModel
                 {
@@ -29,7 +29,7 @@ namespace API_DIR.Responses
                     error = true,
                     errorMessage = errorMessage
                 };
-                return Ok(response);
+                return BadRequest(response);
             }
         }
 

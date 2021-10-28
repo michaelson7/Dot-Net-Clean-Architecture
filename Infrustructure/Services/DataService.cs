@@ -75,7 +75,7 @@ namespace Infrustructure.Services
             output = list.FirstOrDefault();
             if (output != null)
             {
-                output.RolesModel = await RolesGet(output.RoleId);
+                output.RolesData = await RolesGet(output.RoleId);
             }
             return output;
         }
@@ -92,7 +92,7 @@ namespace Infrustructure.Services
             {
                 foreach (var data in output)
                 {
-                    data.RolesModel = await RolesGet(data.RoleId);
+                    data.RolesData = await RolesGet(data.RoleId);
                 }
             }
             return output;
@@ -124,7 +124,7 @@ namespace Infrustructure.Services
             output = list.FirstOrDefault();
             if (output != null)
             {
-                output.RolesModel = await RolesGet(output.RoleId);
+                output.RolesData = await RolesGet(output.RoleId);
             }
             return output;
         }
