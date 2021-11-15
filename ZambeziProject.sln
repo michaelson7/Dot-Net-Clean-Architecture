@@ -8,6 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WEB-API", "WEB-API", "{BF24C860-E706-44DF-AEEA-D16763C51370}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WEB-Site", "WEB-Site", "{F7B9BFDC-355D-4998-A20E-702796349597}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\..\..\..\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\Backup\backup = ..\..\..\..\..\..\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\Backup\backup
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API-DIR", "API-DIR\API-DIR.csproj", "{D96A0227-6932-450F-A449-7F6E498C4C61}"
 EndProject
