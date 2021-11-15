@@ -1,7 +1,9 @@
 ﻿using Application.Interfaces;
 using Domain.Models;
 using Infrustructure.StoredProcedures;
+using Microsoft.AspNetCore.Http;
 using System;
+using System.Web;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -630,6 +632,18 @@ namespace Infrustructure.Services
                 }
 
             }
+            return output;
+        }
+
+        public async Task<StationStatsModel> StationsGetStatistics(int Id)
+        {
+            StationStatsModel output = new StationStatsModel();
+            var list = await _db.LoadDataAsync<StationStatsModel, dynamic>(_sp.StationsGetStatistics,
+                                                 new
+                                                 { StationId = Id },
+                                                 connectionStringName,
+                                                 true);
+            output = list.FirstOrDefault();
             return output;
         }
 

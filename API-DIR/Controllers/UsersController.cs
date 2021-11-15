@@ -140,7 +140,7 @@ namespace API_DIR.Controllers
         }
 
         //Login
-        [HttpPost]
+        [HttpGet]
         [Route("loginUser")]
         public async Task<ActionResult<UsersModel>> loginUser(string email, string password)
         {

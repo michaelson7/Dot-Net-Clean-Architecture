@@ -1,3 +1,4 @@
+using API_DIR.Handlers;
 using Application.Interfaces;
 using Infrustructure.DataAccess;
 using Infrustructure.Services;
@@ -50,6 +51,7 @@ namespace API_DIR
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseStaticFiles();//make wwroot folder static
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

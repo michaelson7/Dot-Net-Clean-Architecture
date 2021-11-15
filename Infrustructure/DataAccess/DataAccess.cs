@@ -14,6 +14,7 @@ namespace Infrustructure.DataAccess
 {
     public class DataAccess : IDataAccess
     {
+        //this objects allows the system to access the database credentials
         private readonly IConfiguration _config;
 
         public DataAccess(IConfiguration config)

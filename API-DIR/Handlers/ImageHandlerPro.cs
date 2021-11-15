@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WEB_DIR.Services
+namespace API_DIR.Handlers
 {
-    public class ImageHandler
+    public class ImageHandlerPro
     {
         public async Task<string> UploadFile(IWebHostEnvironment _env, IFormFile formFile, string folderName = "Images")
         {
@@ -18,7 +18,8 @@ namespace WEB_DIR.Services
                 try
                 {
                     var uniqueFileName = GetUniqueFileName(formFile.FileName);
-                    var dir = Path.Combine(_env.WebRootPath, folderName);
+                    //var dir = Path.Combine(_env.WebRootPath, folderName);
+                    var dir = "C:\\inetpub\\wwwroot\\HydroApplication\\Website\\wwwroot\\Images";
                     if (!Directory.Exists(dir))
                     {
                         Directory.CreateDirectory(dir);
@@ -30,7 +31,7 @@ namespace WEB_DIR.Services
                 catch (Exception e)
                 {
                     Debug.WriteLine($"Image Upload ERROR: {e}");
-                    return null;
+                    throw new ArgumentException($"Image Upload ERROR: {e}");
                 }
             }
             else
@@ -46,7 +47,5 @@ namespace WEB_DIR.Services
                    + Path.GetExtension(fileName);
         }
 
-
     }
-
 }

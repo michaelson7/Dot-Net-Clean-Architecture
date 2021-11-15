@@ -1,6 +1,8 @@
-﻿using API_DIR.Responses;
+﻿using API_DIR.Handlers;
+using API_DIR.Responses;
 using Application.Interfaces;
 using Domain.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,19 +15,28 @@ namespace API_DIR.Controllers
     {
         private readonly IDataService _db;
         public JsonResponse _response = new JsonResponse();
+        private readonly IWebHostEnvironment _env;
+        public ImageHandlerPro _imageHandler = new();
 
-        public GaugeRecordsController(IDataService db)
+        public GaugeRecordsController(IDataService db, IWebHostEnvironment env)
         {
             _db = db;
+            _env = env;
         }
 
         //create
         [HttpPost]
         [Route("createGaugeRecords")]
-        public async Task<ActionResult<GaugeRecordsModel>> createGaugeRecords([FromBody] GaugeRecordsModel model)
+        public async Task<ActionResult<GaugeRecordsModel>> createGaugeRecords([FromForm] GaugeRecordsModel model)
         {
             try
             {
+                //upload file
+                if (model.ImageFile != null)
+                {
+                    var imageName = await _imageHandler.UploadFile(_env, model.ImageFile);
+                    model.Imagepath = imageName;
+                }
                 var output = await _db.GaugeRecordsCreate(model);
                 return _response.getResponse(output, "Error while creating GaugeRecords");
             }
@@ -58,7 +69,13 @@ namespace API_DIR.Controllers
         {
             try
             {
+                string baseUrl = string.Format("{0}://{1}",
+                       HttpContext.Request.Scheme, HttpContext.Request.Host);
                 var output = await _db.GaugeRecordsGetAll();
+                //foreach (var data in output)
+                //{
+                //    data.Imagepath = $"{baseUrl}/Images/{data.Imagepath}";
+                //}
                 return _response.getResponse(output, "GaugeRecords not found");
             }
             catch (Exception e)
@@ -74,6 +91,12 @@ namespace API_DIR.Controllers
         {
             try
             {
+                //upload file
+                if (model.ImageFile != null)
+                {
+                    var imageName = await _imageHandler.UploadFile(_env, model.ImageFile);
+                    model.Imagepath = imageName;
+                }
                 await _db.GaugeRecordsUpdate(model);
                 return _response.getResponse("", "GaugeRecords not updated");
             }

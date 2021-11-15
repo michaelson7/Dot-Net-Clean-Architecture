@@ -60,6 +60,7 @@ namespace Application.Interfaces
         Task StationsUpdate(StationsModel model);
         Task StationsDelete(int Id);
         Task<StationsModel> StationsGet(int Id);
+        Task<StationStatsModel> StationsGetStatistics(int Id);
         Task<List<StationsModel>> StationsGetAll();
         Task<List<GaugeStationModel>> StationsGetGauge(int Id);
         Task<List<HistoricalDataModel>> StationsGetHistoricalDataYears(int Id);
