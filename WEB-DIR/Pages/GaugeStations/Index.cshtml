@@ -5,7 +5,7 @@
 }
 
 <div>
-    <h4 class="mt-4">GaugeStation Handler</h4>
+    <h4 class="mt-4">Gauge Readers</h4>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item active"><a asp-page="/Index" class="ml-1 mr-1">Dashboard</a> / GaugeStation</li>
     </ol>
@@ -109,8 +109,8 @@
                                                         '@data.Title','@data.StationsModel.Id','@data.StationsModel.Title')">
                                                         Edit
                                                     </button>
-                                                    <span class="pr-1 pl-1"></span> 
-                                                    <a class="btn btn-secondary" asp-page="/GaugeRecords/Index" asp-route-gaugeRecordId="@data.Id">View Gauge Records</a> 
+                                                    <span class="pr-1 pl-1"></span>
+                                                    <a class="btn btn-secondary" asp-page="/GaugeRecords/Index" asp-route-gaugeRecordId="@data.Id">View Gauge Records</a>
                                                     <span class="pr-1 pl-1"></span>
                                                     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this?')">Delete</button>
                                                 </form>
