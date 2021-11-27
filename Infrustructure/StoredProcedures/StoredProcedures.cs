@@ -49,6 +49,7 @@ namespace Infrustructure.StoredProcedures
         public string GaugeStationGet = baseValue + "GaugeStationGet";
         public string GaugeStationGetAll = baseValue + "GaugeStationGetAll";
         public string GaugeStationGetRecords = baseValue + "GaugeStationGetRecords";
+        public string GaugeStationGetByStationId = baseValue + "GaugeStationGetByStationId";
 
         //Staff
         public string StaffCreate = baseValue + "StaffCreate";
@@ -74,5 +75,9 @@ namespace Infrustructure.StoredProcedures
         public string StationStatisticsDelete = baseValue + "StationStatisticsDelete";
         public string StationStatisticsGet = baseValue + "StationStatisticsGet";
         public string StationStatisticsGetAll = baseValue + "StationStatisticsGetAll";
+
+        //stats
+        public string StatsGetAvgWaterLevel = baseValue + "StatsGetAvgWaterLevel";
+        public string StatsGetMostRecords = baseValue + "StatsGetMostRecords";
     }
 }

@@ -117,9 +117,9 @@
                                     <td>@data.GaugeStationModel.Title</td>
                                     <td>@data.GPSLocation</td>
                                     <td>@data.GaugeStationModel.StationsModel.StationStatisticsModel.Coordinates</td>
-                                    <td>@data.Waterlevel</td>
-                                    <td>@data.RiverFlow</td>
-                                    <td>@data.Temperature</td>
+                                    <td>@data.Waterlevel <small class="text-muted">(m)</small> </td>
+                                    <td>@data.RiverFlow <small class="text-muted">(m³/s)</small></td>
+                                    <td>@data.Temperature <small class="text-muted">(°)</small></td>
                                     <td>
                                         <form method="post">
                                             <input type="hidden" name="Handleapproval" value="true" />
@@ -185,12 +185,12 @@
                         <input asp-for="@Model.GaugeRecordsModel.ImageFile" type="file" class="form-control" name="ImageFile" accept="image/*">
                         <label>GPSLocation</label>
                         <input type="text" class="form-control" name="GPSLocation" required>
-                        <label>Water level</label>
-                        <input type="number" class="form-control" name="Waterlevel" min="0" value="0" required>
-                        <label>Temperature</label>
-                        <input type="number" class="form-control" name="Temperature" min="0" value="0" required>
-                        <label>RiverFlow</label>
-                        <input type="number" class="form-control" name="RiverFlow" min="0" value="0" required>
+                        <label>Water level <small>(m)</small></label>
+                        <input type="number" class="form-control" name="Waterlevel" min="0" value="0" step=".001" required>
+                        <label>Temperature <small>(°)</small></label>
+                        <input type="number" class="form-control" name="Temperature" min="0" value="0" step=".001" required>
+                        <label>RiverFlow <small>(m³/s)</small></label>
+                        <input type="number" class="form-control" name="RiverFlow" min="0" value="0" step=".001" required>
                         <label>Gauge</label>
                         <select class="form-control" name="GaugeId">
                             @foreach (var item in Model.GaugeStationModel)
@@ -208,29 +208,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    function editModel(id, Gagetitle, gageId, Location, water, RiverFlow, Temperature, Imagepath) {
-        //defaults
-        document.getElementsByName('dbOperations')[0].value = "Update";
-        document.getElementsByName('Id')[0].value = id;
-
-        //custom
-        document.getElementsByName('Imagepath')[0].value = Imagepath;
-        document.getElementsByName('GPSLocation')[0].value = Location;
-        document.getElementsByName('Waterlevel')[0].value = water;
-        document.getElementsByName('Temperature')[0].value = Temperature;
-        document.getElementsByName('RiverFlow')[0].value = RiverFlow;
-
-        //select handler
-        var select = document.getElementsByName('GaugeId')[0];
-        var opt = document.createElement('option');
-        opt.value = gageId;
-        opt.innerHTML = Gagetitle;
-        select.add(opt, select[0]);
-        select.selectedIndex = 0;
-
-        //display model
-        $('#modal').modal('show');
-    }
-</script>

@@ -16,32 +16,32 @@
             <div class="card bg-primary text-white mb-4">
                 <div class="card-body">
                     <!-- fetch user# -->
-                    <h4> Users</h4>
-                    <span id="userNum"><br>
+                    <h4> Stations</h4>
+                    <span id="userNum">@Model.stationsCount<br>
                 </div>
             </div>
         </div>
         <div class="col-xl-3 col-md-6">
             <div class="card bg-warning text-white mb-4">
                 <div class="card-body">
-                    <h4>Events</h4>
-                    <span id="eventNum"><br>
+                    <h4>Gauge Readers</h4>
+                    <span id="eventNum">@Model.gaugeReaderCount<br>
                 </div>
             </div>
         </div>
         <div class="col-xl-3 col-md-6">
             <div class="card bg-success text-white mb-4">
                 <div class="card-body">
-                    <h4>Resources</h4>
-                    <span id="resourceNum"><br>
+                    <h4>Gauge Records</h4>
+                    <span id="resourceNum">@Model.gaugeRecordCount<br>
                 </div>
             </div>
         </div>
         <div class="col-xl-3 col-md-6">
             <div class="card bg-danger text-white mb-4">
                 <div class="card-body">
-                    <h4>Faculties</h4>
-                    <span id="facultyNum"><br>
+                    <h4>News</h4>
+                    <span id="facultyNum">@Model.newsCount<br>
                 </div>
             </div>
         </div>
@@ -54,9 +54,9 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-chart-area mr-1"></i>
-                    User Growth
+                    Records Per Station
                 </div>
-                <div class="card-body"><canvas id="growthChart" width="100%" height="40"></canvas></div>
+                <div class="card-body"><canvas id="waterChart" width="100%" height="40"></canvas></div>
             </div>
         </div>
 
@@ -65,7 +65,7 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-chart-bar mr-1"></i>
-                    Popular Resource
+                    Average Water level
                 </div>
                 <div class="card-body"><canvas id="resourceChart" width="100%" height="40"></canvas></div>
             </div>
@@ -76,7 +76,7 @@
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table mr-1"></i>
-            Current Transactions
+            Current GaugeRecords
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -84,23 +84,61 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Customer Name</th>
-                            <th>ProductName</th>
-                            <th>Total</th>
-                            <th>Address</th>
+                            <th>Image</th>
+                            <th>Uploader</th>
+                            <th>Gauge</th>
+                            <th>Location Of Upload</th>
+                            <th>Gauge Coordinates</th>
+                            <th>Water Level</th>
+                            <th>River Flow</th>
+                            <th>Temperature</th>
+                            <th>Approval</th>
+                            <th>Approver</th>
+                            <th>Timestamp</th>
                         </tr>
                     </thead>
 
-                    <tfoot>
-                        <tr>
-                            <th>ID</th>
-                            <th>Customer Name</th>
-                            <th>ProductName</th>
-                            <th>Total</th>
-                            <th>Address</th>
-                        </tr>
-                    </tfoot>
                     <tbody id="tableData">
+                        @if (Model.hasData)
+                        {
+                            foreach (var data in Model.GaugeRecordsModelList)
+                            {
+                                <tr>
+                                    <td>@data.Id</td>
+                                    <td>
+                                        <a href="~/Images/@data.Imagepath">
+                                            <img src="~/Images/@data.Imagepath" width="100" height="100" class="rounded" alt="File Not Found"
+                                                 onerror="this.onerror=null; this.src='https://image.freepik.com/free-vector/error-404-concept-illustration_114360-1811.jpg'" />
+                                        </a>
+                                    </td>
+                                    <td>@data.UploaderModel.FirstName @data.UploaderModel.LastName</td>
+                                    <td>@data.GaugeStationModel.Title</td>
+                                    <td>@data.GPSLocation</td>
+                                    <td>@data.GaugeStationModel.StationsModel.StationStatisticsModel.Coordinates</td>
+                                    <td>@data.Waterlevel <small class="text-muted">(m)</small> </td>
+                                    <td>@data.RiverFlow <small class="text-muted">(m³/s)</small></td>
+                                    <td>@data.Temperature <small class="text-muted">(°)</small></td>
+                                    <td>
+                                        <form method="post">
+                                            <input type="hidden" name="Handleapproval" value="true" />
+                                            <input type="hidden" name="ApproveId" value="@data.Id" />
+                                            @if (data.Approval != true)
+                                            {
+                                                <p class="text-danger">@data.Approval</p>
+                                                <input type="hidden" name="Approval" value="True" />
+                                            }
+                                            else
+                                            {
+                                                <p class="text-success">@data.Approval</p>
+                                                <input type="hidden" name="Approval" value="False" />
+                                            }
+                                        </form>
+                                    </td>
+                                    <td>@data.ApproverModel.FirstName @data.ApproverModel.LastName</td>
+                                    <td>@data.Timestamp</td>
+                                </tr>
+                            }
+                        }
                     </tbody>
                 </table>
             </div>
@@ -110,3 +148,67 @@
 </div>
 
 
+<script>
+    $(document).ready(async function () {
+        Chart.defaults.global.defaultFontColor = "#fff";
+        await getWater();
+    });
+
+    async function getWater() { 
+        await makeGetRequest(baseUrl + `StatsGetMostRecords`).then(response => {
+            if (response != null) {
+                var data = [];
+                var label = [];
+                for (i in response.results) {
+                    var colors = getRandomColor();
+                    var dataList = response.results[i];
+
+                    data.push(dataList.countValue);
+                    label.push(dataList.title);
+
+                    var ctx = document.getElementById('waterChart').getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: label,
+                            datasets: [{
+                                label: ` Transactions`,
+                                data: data,
+                                borderColor: colors,
+
+                            }]
+                        }
+                    });
+                }
+            }
+        });
+
+        await makeGetRequest(baseUrl + `StatsGetAvgWaterLevel`).then(response => {
+            if (response != null) {
+                var data = [];
+                var label = [];
+                for (i in response.results) {
+                    var colors = getRandomColor();
+                    var dataList = response.results[i];
+
+                    data.push(dataList.countValue);
+                    label.push(dataList.title);
+
+                    var ctx = document.getElementById('resourceChart').getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: label,
+                            datasets: [{
+                                label: ` Transactions`,
+                                data: data,
+                                borderColor: colors,
+
+                            }]
+                        }
+                    });
+                }
+            }
+        });
+    }
+</script>

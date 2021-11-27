@@ -46,6 +46,7 @@ namespace Application.Interfaces
         Task GaugeStationDelete(int Id);
         Task<GaugeStationModel> GaugeStationGet(int Id);
         Task<List<GaugeStationModel>> GaugeStationGetAll();
+        Task<GaugeStationModel> GaugeStationGetByStationId(int Id);
         Task<GaugeRecordsModel> GaugeStationGetRecords(int Id);
 
         //Staff
@@ -73,5 +74,9 @@ namespace Application.Interfaces
         Task StationStatisticsDelete(int Id);
         Task<StationStatisticsModel> StationStatisticsGet(int Id);
         Task<List<StationStatisticsModel>> StationStatisticsGetAll();
+
+        //stats
+        Task<List<statsModel>> StatsGetAvgWaterLevel();
+        Task<List<statsModel>> StatsGetMostRecords();
     }
 }

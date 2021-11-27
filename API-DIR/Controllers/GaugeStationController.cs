@@ -51,6 +51,21 @@ namespace API_DIR.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GaugeStationGetByStationId")]
+        public async Task<ActionResult<GaugeStationModel>> GaugeStationGetByStationId(int id)
+        {
+            try
+            {
+                var output = await _db.GaugeStationGetByStationId(id);
+                return _response.getResponse(output, "GaugeStation not found");
+            }
+            catch (Exception e)
+            {
+                return _response.errorResponse(e.Message);
+            }
+        }
+
         //getAll
         [HttpGet]
         [Route("getAllGaugeStation")]

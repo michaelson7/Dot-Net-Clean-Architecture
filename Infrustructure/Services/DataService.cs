@@ -475,6 +475,30 @@ namespace Infrustructure.Services
             return output;
         }
 
+        public async Task<GaugeStationModel> GaugeStationGetByStationId(int Id)
+        {
+            List<GaugeStationModel> output = new List<GaugeStationModel>();
+            output = await _db.LoadDataAsync<GaugeStationModel, dynamic>(_sp.GaugeStationGetByStationId,
+                                                 new
+                                                 { Id = @Id },
+                                                 connectionStringName,
+                                                 true);
+            if (output != null)
+            {
+                foreach (var data in output)
+                {
+                    var dataList = await StationsGet(data.StationId);
+
+                    if (dataList != null)
+                    {
+                        data.StationsModel = dataList;
+                    }
+                }
+            }
+            return output.FirstOrDefault();
+        }
+
+
         public async Task<GaugeRecordsModel> GaugeStationGetRecords(int Id)
         {
             GaugeRecordsModel output = new GaugeRecordsModel();
@@ -785,5 +809,30 @@ namespace Infrustructure.Services
         }
 
 
+        /// <summary>
+        /// STATS
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<statsModel>> StatsGetAvgWaterLevel()
+        {
+            List<statsModel> output = new List<statsModel>();
+            output = await _db.LoadDataAsync<statsModel, dynamic>(_sp.StatsGetAvgWaterLevel,
+                                                new
+                                                { },
+                                                connectionStringName,
+                                                true);
+            return output;
+        }
+
+        public async Task<List<statsModel>> StatsGetMostRecords()
+        {
+            List<statsModel> output = new List<statsModel>();
+            output = await _db.LoadDataAsync<statsModel, dynamic>(_sp.StatsGetMostRecords,
+                                                new
+                                                { },
+                                                connectionStringName,
+                                                true);
+            return output;
+        }
     }
 }

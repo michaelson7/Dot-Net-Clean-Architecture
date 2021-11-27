@@ -82,5 +82,37 @@ namespace API_DIR.Controllers
                 return _response.errorResponse(e.Message);
             }
         }
+
+        [HttpGet]
+        [Route("StatsGetAvgWaterLevel")]
+        public async Task<ActionResult<IEnumerable<statsModel>>> StatsGetAvgWaterLevel()
+        {
+            try
+            {
+                var output = await _db.StatsGetAvgWaterLevel();
+                return _response.getResponse(output, "StatsGetAvgWaterLevel not found");
+            }
+            catch (Exception e)
+            {
+                return _response.errorResponse(e.Message);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("StatsGetMostRecords")]
+        public async Task<ActionResult<IEnumerable<statsModel>>> StatsGetMostRecords()
+        {
+            try
+            {
+                var output = await _db.StatsGetMostRecords();
+                return _response.getResponse(output, "StatsGetMostRecords not found");
+            }
+            catch (Exception e)
+            {
+                return _response.errorResponse(e.Message);
+            }
+        }
+
     }
 }
