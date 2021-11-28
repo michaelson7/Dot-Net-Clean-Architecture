@@ -181,16 +181,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
+
                         <label>Image</label>
                         <input asp-for="@Model.GaugeRecordsModel.ImageFile" type="file" class="form-control" name="ImageFile" accept="image/*">
                         <label>GPSLocation</label>
                         <input type="text" class="form-control" name="GPSLocation" required>
                         <label>Water level <small>(m)</small></label>
-                        <input type="number" class="form-control" name="Waterlevel" min="0" value="0" step=".001" required>
+                        <input id="waterLevel" onchange="submitWater()" type="number" class="form-control" name="Waterlevel" min="0" value="0" step=".001" required>
                         <label>Temperature <small>(°)</small></label>
                         <input type="number" class="form-control" name="Temperature" min="0" value="0" step=".001" required>
                         <label>RiverFlow <small>(m³/s)</small></label>
-                        <input type="number" class="form-control" name="RiverFlow" min="0" value="0" step=".001" required>
+                        <input id="riverFlow" type="number" class="form-control" name="RiverFlow" min="0" value="0" step=".001" required>
                         <label>Gauge</label>
                         <select class="form-control" name="GaugeId">
                             @foreach (var item in Model.GaugeStationModel)
@@ -198,6 +199,8 @@
                                 <option value="@item.Id">@item.Title</option>
                             }
                         </select>
+                        <label>Date<small></small></label>
+                        <input type="datetime-local" class="form-control" name="Timestamp">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -208,3 +211,22 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    //
+
+    function submitWater() {
+        var H1 = $('#waterLevel').val();
+        var constant = 198.426;
+        var HO = 3.623;
+        var gradient = 1.787;
+
+        var firstResult = H1 - HO;
+        var sencondResult = Math.pow(firstResult, gradient);
+        var finalResult = constant * sencondResult;
+
+        $('#riverFlow').val(finalResult.toFixed(3));
+    }
+
+</script>

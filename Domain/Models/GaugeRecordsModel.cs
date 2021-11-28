@@ -19,7 +19,7 @@ namespace Domain.Models
         public int GaugeId { get; set; }
         public bool Approval { get; set; }
         public int ApproverId { get; set; }
-        public DateTime Timestamp { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.Now;
 
         public UsersModel UploaderModel { get; set; } = new();
         public UsersModel ApproverModel { get; set; } = new();

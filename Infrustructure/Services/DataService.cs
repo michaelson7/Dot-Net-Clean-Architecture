@@ -282,7 +282,8 @@ namespace Infrustructure.Services
                                                  Waterlevel = model.Waterlevel,
                                                  Temperature = model.Temperature,
                                                  RiverFlow = model.RiverFlow,
-                                                 GaugeId = model.GaugeId
+                                                 GaugeId = model.GaugeId,
+                                                 Timestamp = model.Timestamp,
                                              },
                                              connectionStringName,
                                              true);
